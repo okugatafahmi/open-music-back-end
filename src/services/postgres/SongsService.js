@@ -2,7 +2,7 @@ const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
-const { mapSongDBToModel, mapSongs } = require('../../utils');
+const { mapSongDBToModel } = require('../../utils');
 
 class SongsService {
   constructor() {
@@ -17,7 +17,7 @@ class SongsService {
     duration = null,
     albumId = null,
   }) {
-    const id = nanoid(16);
+    const id = `song-${nanoid(16)}`;
 
     const query = {
       text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id',
@@ -34,8 +34,8 @@ class SongsService {
   }
 
   async getSongs() {
-    const result = await this.pool.query('SELECT * FROM songs');
-    return result.rows.map(mapSongs);
+    const result = await this.pool.query('SELECT id, title, performer FROM songs');
+    return result.rows;
   }
 
   async getSongById(id) {
@@ -54,11 +54,11 @@ class SongsService {
 
   async getSongsByAlbumId(albumId) {
     const query = {
-      text: 'SELECT * FROM songs WHERE album_id = $1',
+      text: 'SELECT id, title, performer FROM songs WHERE album_id = $1',
       values: [albumId],
     };
     const result = await this.pool.query(query);
-    return result.rows.map(mapSongs);
+    return result.rows;
   }
 
   async editSongById(id, {

@@ -1,5 +1,3 @@
-const { getResponse, getErrorResponse } = require('../../utils');
-
 class AlbumsHandler {
   constructor(service, validator) {
     this.service = service;
@@ -18,14 +16,19 @@ class AlbumsHandler {
 
       const albumId = await this.service.addAlbum({ name, year });
 
-      const response = getResponse(h, 201, 'Album berhasil ditambahkan', { albumId });
+      const response = h.response({
+        status: 'success',
+        message: 'Album berhasil ditambahkan',
+        data: { albumId },
+      });
+      response.code(201);
       return response;
     } catch (error) {
-      return getErrorResponse(h, error);
+      return error;
     }
   }
 
-  async getAlbumByIdHandler(request, h) {
+  async getAlbumByIdHandler(request) {
     try {
       const { id } = request.params;
       const album = await this.service.getAlbumById(id);
@@ -36,11 +39,11 @@ class AlbumsHandler {
         },
       };
     } catch (error) {
-      return getErrorResponse(h, error);
+      return error;
     }
   }
 
-  async putAlbumByIdHandler(request, h) {
+  async putAlbumByIdHandler(request) {
     try {
       this.validator.validateAlbumPayload(request.payload);
       const { name, year } = request.payload;
@@ -53,11 +56,11 @@ class AlbumsHandler {
         message: 'Album berhasil diperbarui',
       };
     } catch (error) {
-      return getErrorResponse(h, error);
+      return error;
     }
   }
 
-  async deleteAlbumByIdHandler(request, h) {
+  async deleteAlbumByIdHandler(request) {
     try {
       const { id } = request.params;
       await this.service.deleteAlbumById(id);
@@ -67,7 +70,7 @@ class AlbumsHandler {
         message: 'Album berhasil dihapus',
       };
     } catch (error) {
-      return getErrorResponse(h, error);
+      return error;
     }
   }
 }
