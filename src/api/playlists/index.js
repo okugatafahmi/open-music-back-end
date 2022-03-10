@@ -8,12 +8,14 @@ module.exports = {
     playlistsService,
     playlistSongsService,
     songsService,
+    activitiesService,
     validator,
   }) => {
     const playlistsHandler = new PlaylistsHandler(
       playlistsService,
       playlistSongsService,
       songsService,
+      activitiesService,
       validator,
     );
     server.route(routes(playlistsHandler));
