@@ -14,7 +14,7 @@ class ActivitiesService {
     userId,
     action,
   }) {
-    const id = `ps_activities-${nanoid(16)}`;
+    const id = `ps_activity-${nanoid(16)}`;
     const time = new Date().toISOString();
 
     const query = {
@@ -25,7 +25,7 @@ class ActivitiesService {
     const result = await this.pool.query(query);
 
     if (!result.rows[0].id) {
-      throw new InvariantError('Activitas gagal ditambahkan');
+      throw new InvariantError('Aktivitas gagal ditambahkan');
     }
 
     return result.rows[0].id;
@@ -43,7 +43,7 @@ class ActivitiesService {
     const result = await this.pool.query(query);
 
     if (!result.rows.length) {
-      throw new NotFoundError('Activitas tidak ditemukan');
+      throw new NotFoundError('Aktivitas tidak ditemukan');
     }
     return result.rows;
   }

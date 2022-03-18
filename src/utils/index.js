@@ -7,4 +7,13 @@ const mapSongDBToModel = ({
   ...restOfAttributes,
 });
 
-module.exports = { mapSongDBToModel };
+const mapAlbumDBToModel = ({
+  // eslint-disable-next-line camelcase
+  cover_url, ...restOfAttributes
+}) => ({
+  // eslint-disable-next-line camelcase
+  coverUrl: cover_url,
+  ...restOfAttributes,
+});
+
+module.exports = { mapSongDBToModel, mapAlbumDBToModel };
