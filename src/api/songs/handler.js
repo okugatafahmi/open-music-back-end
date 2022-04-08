@@ -12,48 +12,20 @@ class SongsHandler {
 
   async postSongHandler(request, h) {
     this.validator.validateSongPayload(request.payload);
-    const {
-      title,
-      year,
-      performer,
-      genre,
-      duration = null,
-      albumId = null,
-    } = request.payload;
 
-    const songId = await this.service.addSong({
-      title,
-      year,
-      performer,
-      genre,
-      duration,
-      albumId,
-    });
+    const songId = await this.service.addSong(request.payload);
 
-    const response = h.response({
+    return h.response({
       status: 'success',
       message: 'Lagu berhasil ditambahkan',
       data: { songId },
-    });
-    response.code(201);
-    return response;
+    }).code(201);
   }
 
   async getSongsHandler(request) {
-    let songs;
     const { title, performer } = request.query;
 
-    if (title) {
-      if (performer) {
-        songs = await this.service.getSongsByTitleContainsAndPerformerContains(title, performer);
-      } else {
-        songs = await this.service.getSongsByTitleContains(title);
-      }
-    } else if (performer) {
-      songs = await this.service.getSongsByPerformerContains(performer);
-    } else {
-      songs = await this.service.getSongs();
-    }
+    const songs = await this.service.getSongs(title, performer);
 
     return {
       status: 'success',

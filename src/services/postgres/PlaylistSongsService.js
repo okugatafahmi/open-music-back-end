@@ -44,7 +44,7 @@ class PlaylistSongsService {
 
     const result = await this.pool.query(query);
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Lagu playlist gagal dihapus. Item tidak ditemukan');
     }
   }
@@ -55,7 +55,7 @@ class PlaylistSongsService {
       values: [playlistId, songId],
     };
     const result = await this.pool.query(query);
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Item tidak ditemukan');
     }
   }

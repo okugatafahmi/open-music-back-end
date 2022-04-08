@@ -22,13 +22,11 @@ class PlaylistsHandler {
 
     const playlistId = await this.playlistsService.addPlaylist({ name, owner: credentialId });
 
-    const response = h.response({
+    return h.response({
       status: 'success',
       message: 'Playlist berhasil ditambahkan',
       data: { playlistId },
-    });
-    response.code(201);
-    return response;
+    }).code(201);
   }
 
   async getPlaylistsHandler(request) {
@@ -71,13 +69,11 @@ class PlaylistsHandler {
       action: 'add',
     });
 
-    const response = h.response({
+    return h.response({
       status: 'success',
       message: 'Lagu playlist berhasil ditambahkan',
       data: { id },
-    });
-    response.code(201);
-    return response;
+    }).code(201);
   }
 
   async getPlaylistSongsByPlaylistIdHandler(request) {
@@ -86,9 +82,8 @@ class PlaylistsHandler {
 
     await this.playlistsService.verifyPlaylistAccess(playlistId, credentialId);
     const playlist = await this.playlistsService.getPlaylistById(playlistId);
-    const playlistSongs = await this.playlistSongsService
+    playlist.songs = await this.playlistSongsService
       .getPlaylistSongsByPlaylistId(playlistId);
-    playlist.songs = playlistSongs;
 
     return {
       status: 'success',

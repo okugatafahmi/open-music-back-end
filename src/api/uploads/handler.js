@@ -18,12 +18,10 @@ class UploadsHandler {
     const fileLocation = `http://${process.env.HOST}:${process.env.PORT}/upload/images/${filename}`;
     await this.albumsService.editAlbumCoverUrl(albumId, fileLocation);
 
-    const response = h.response({
+    return h.response({
       status: 'success',
       message: 'Sampul berhasil diunggah',
-    });
-    response.code(201);
-    return response;
+    }).code(201);
   }
 }
 

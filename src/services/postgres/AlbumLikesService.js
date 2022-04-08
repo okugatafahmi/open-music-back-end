@@ -40,7 +40,7 @@ class AlbumLikessService {
       };
       const result = await this.pool.query(query);
 
-      if (!result.rows.length) {
+      if (!result.rowCount) {
         throw new NotFoundError('Album tidak ditemukan');
       }
 
@@ -61,7 +61,7 @@ class AlbumLikessService {
 
     const result = await this.pool.query(query);
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Kesukaan album gagal dihapus. Item tidak ditemukan');
     }
 

@@ -33,8 +33,12 @@ class SongsService {
     return result.rows[0].id;
   }
 
-  async getSongs() {
-    const result = await this.pool.query('SELECT id, title, performer FROM songs');
+  async getSongs(title = '', performer = '') {
+    const query = {
+      text: 'SELECT id, title, performer FROM songs WHERE title ILIKE $1 AND performer ILIKE $2',
+      values: [`%${title}%`, `%${performer}%`],
+    };
+    const result = await this.pool.query(query);
     return result.rows;
   }
 
@@ -45,7 +49,7 @@ class SongsService {
     };
     const result = await this.pool.query(query);
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Lagu tidak ditemukan');
     }
 
@@ -56,33 +60,6 @@ class SongsService {
     const query = {
       text: 'SELECT id, title, performer FROM songs WHERE album_id = $1',
       values: [albumId],
-    };
-    const result = await this.pool.query(query);
-    return result.rows;
-  }
-
-  async getSongsByTitleContains(title) {
-    const query = {
-      text: 'SELECT id, title, performer FROM songs WHERE title ILIKE $1',
-      values: [`%${title}%`],
-    };
-    const result = await this.pool.query(query);
-    return result.rows;
-  }
-
-  async getSongsByPerformerContains(performer) {
-    const query = {
-      text: 'SELECT id, title, performer FROM songs WHERE performer ILIKE $1',
-      values: [`%${performer}%`],
-    };
-    const result = await this.pool.query(query);
-    return result.rows;
-  }
-
-  async getSongsByTitleContainsAndPerformerContains(title, performer) {
-    const query = {
-      text: 'SELECT id, title, performer FROM songs WHERE title ILIKE $1 AND performer ILIKE $2',
-      values: [`%${title}%`, `%${performer}%`],
     };
     const result = await this.pool.query(query);
     return result.rows;
@@ -103,7 +80,7 @@ class SongsService {
 
     const result = await this.pool.query(query);
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Gagal memperbarui lagu. Id tidak ditemukan');
     }
   }
@@ -116,7 +93,7 @@ class SongsService {
 
     const result = await this.pool.query(query);
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Lagu gagal dihapus. Id tidak ditemukan');
     }
   }
@@ -128,7 +105,7 @@ class SongsService {
     };
     const result = await this.pool.query(query);
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Lagu tidak ditemukan');
     }
   }
